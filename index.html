@@ -2,502 +2,324 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0f1a14">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coach Muscu</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #0F6E56;
-  --amber: #EF9F27; --amber-light: #FAEEDA; --amber-dark: #854F0B;
-  --bg: #f4f6f5; --surface: #ffffff; --text: #1a1f1d; --text-muted: #6b7873;
-  --border: rgba(0,0,0,0.08); --radius: 14px; --radius-sm: 8px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 430px; margin: 0 auto; }
-.header { background: var(--surface); padding: 16px 20px 12px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-.header-row { display: flex; align-items: center; gap: 10px; }
-.back-btn { display: none; background: none; border: none; cursor: pointer; color: var(--green); padding: 2px; flex-shrink: 0; }
-.back-btn svg { width: 24px; height: 24px; display: block; }
-.header h1 { font-size: 19px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.header h1 span { color: var(--green); }
-.header-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-.screen { display: none; padding: 16px; padding-bottom: 90px; }
-.screen.active { display: block; }
-.nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--surface); border-top: 1px solid var(--border); display: flex; padding: 10px 0 18px; z-index: 200; }
-.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; border: none; background: none; cursor: pointer; font-size: 11px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); }
-.nav-btn.active { color: var(--green); }
-.nav-btn svg { width: 22px; height: 22px; }
-.level-filter { display: flex; gap: 8px; margin-bottom: 16px; }
-.level-chip { flex: 1; padding: 9px 8px; border-radius: 24px; border: 1px solid var(--border); font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; background: var(--surface); color: var(--text-muted); text-align: center; font-weight: 500; }
-.level-chip.active { background: var(--green); color: white; border-color: var(--green); }
-.body-map-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
-.body-map-hint { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 14px; }
-.body-map-views { display: flex; justify-content: center; gap: 20px; }
-.body-view-wrap { text-align: center; }
-.body-view-label { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
-.body-view-wrap svg { width: 115px; height: auto; }
-.mz { cursor: pointer; transition: opacity 0.15s; }
-.mz:hover { opacity: 0.7; }
-.mz.selected { filter: drop-shadow(0 0 4px rgba(29,158,117,0.8)); }
-.section-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
-.muscle-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.muscle-chip { padding: 8px 14px; border-radius: 24px; border: 1px solid var(--border); font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; background: var(--surface); color: var(--text); font-weight: 500; }
-.muscle-chip.active { background: var(--green); color: white; border-color: var(--green); }
-.exo-list { display: flex; flex-direction: column; gap: 10px; }
-.exo-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; cursor: pointer; }
-.exo-card:active { transform: scale(0.98); }
-.exo-img-wrap { width: 100%; height: 150px; background: var(--bg); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.exo-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
-.exo-img-ph { font-size: 48px; }
-.exo-body { padding: 13px 15px; }
-.exo-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.exo-name { font-size: 15px; font-weight: 600; line-height: 1.3; }
-.exo-level { flex-shrink: 0; font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 600; margin-top: 2px; }
-.lv-debutant { background: var(--green-light); color: var(--green-dark); }
-.lv-confirme { background: var(--amber-light); color: var(--amber-dark); }
-.exo-cat { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
-.loading { text-align: center; padding: 48px 20px; color: var(--text-muted); }
-.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-.empty-icon { font-size: 40px; margin-bottom: 10px; }
-.empty-state p { font-size: 14px; }
-.detail-img-wrap { width: 100%; height: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; }
-.detail-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
-.thumb-row { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 2px; scrollbar-width: none; }
-.thumb-row::-webkit-scrollbar { display: none; }
-.thumb-row img { height: 72px; width: 72px; object-fit: contain; border-radius: 8px; background: var(--bg); flex-shrink: 0; border: 1px solid var(--border); }
-.detail-header { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 10px; }
-.detail-name { font-size: 20px; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
-.badges { display: flex; gap: 7px; flex-wrap: wrap; }
-.badge { font-size: 12px; padding: 4px 12px; border-radius: 12px; font-weight: 600; }
-.badge-green { background: var(--green-light); color: var(--green-dark); }
-.badge-amber { background: var(--amber-light); color: var(--amber-dark); }
-.badge-gray { background: #f0f2f1; color: var(--text-muted); }
-.detail-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px; }
-.detail-section h3 { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
-.detail-section p { font-size: 14px; line-height: 1.75; }
-.muscles-row { display: flex; flex-wrap: wrap; gap: 6px; }
-.add-btn { width: 100%; padding: 16px; background: var(--green); color: white; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 4px; }
-.add-btn:active { background: var(--green-dark); }
-.add-btn.added { background: #9ab; }
-.seance-empty { text-align: center; padding: 48px 20px; }
-.seance-empty .icon { font-size: 44px; margin-bottom: 12px; }
-.seance-empty p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
-.seance-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.seance-top-title { font-size: 15px; font-weight: 600; }
-.clear-btn { font-size: 13px; color: #E24B4A; background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; }
-.seance-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-.seance-item-name { font-size: 14px; font-weight: 600; }
-.check { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-.check.on { background: var(--green); border-color: var(--green); }
-.seance-footer { background: var(--green-light); border-radius: var(--radius-sm); padding: 13px 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
-.seance-footer span { font-size: 14px; color: var(--green-dark); font-weight: 600; }
-.finish-btn { padding: 9px 20px; background: var(--green); color: white; border: none; border-radius: 20px; font-size: 14px; font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 600; }
-.warning { background: var(--amber-light); border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 16px; font-size: 12px; color: var(--amber-dark); line-height: 1.5; }
-.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a1f1d; color: white; font-size: 14px; padding: 12px 24px; border-radius: 24px; opacity: 0; transition: all 0.3s; z-index: 999; white-space: nowrap; pointer-events: none; }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.badge-count { display: none; background: var(--green); color: white; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 3px; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f0f0f;color:#f0f0f0;min-height:100vh}
+header{background:#1a1a1a;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid #2a2a2a}
+header h1{font-size:1.25rem;font-weight:700;letter-spacing:1px}
+.badge{background:#e63946;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0}
+
+/* TABS */
+.tabs{display:flex;background:#1a1a1a;border-bottom:1px solid #2a2a2a;position:sticky;top:57px;z-index:99}
+.tab{flex:1;padding:13px 8px;text-align:center;font-size:.82rem;color:#666;cursor:pointer;border-bottom:2px solid transparent;transition:.2s;user-select:none}
+.tab.active{color:#fff;border-bottom-color:#e63946}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block}
+
+/* BODY MAP */
+#screen-corps{padding:16px}
+.side-toggle{display:flex;justify-content:center;gap:10px;margin-bottom:18px}
+.side-btn{background:#2a2a2a;color:#888;border:none;padding:9px 24px;border-radius:22px;cursor:pointer;font-size:.85rem;font-weight:500;transition:.2s}
+.side-btn.active{background:#e63946;color:#fff}
+.svg-wrap{max-width:320px;margin:0 auto}
+.svg-wrap svg{width:100%;height:auto;display:block}
+.body-silhouette{fill:#242424;stroke:#333;stroke-width:1}
+.muscle-zone{fill:rgba(230,57,70,0.08);stroke:rgba(230,57,70,0.2);stroke-width:1;cursor:pointer;transition:fill .18s,stroke .18s}
+.muscle-zone:hover,.muscle-zone:active{fill:rgba(230,57,70,0.35);stroke:#e63946;stroke-width:1.5}
+.muscle-zone.active{fill:rgba(230,57,70,0.5);stroke:#e63946;stroke-width:2}
+.zone-label{font-size:7.5px;fill:#bbb;text-anchor:middle;dominant-baseline:middle;pointer-events:none;user-select:none}
+.map-hint{text-align:center;margin-top:14px;font-size:.78rem;color:#555}
+
+/* EXERCISES */
+#screen-exercices{padding:16px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filter-btn{background:#2a2a2a;color:#888;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:.8rem;font-weight:500;transition:.2s;white-space:nowrap}
+.filter-btn.active{background:#e63946;color:#fff}
+.muscle-tag{display:inline-flex;align-items:center;gap:7px;background:#1c2d3a;color:#7ec8e3;border:1px solid #2a5a8f;padding:7px 13px;border-radius:20px;font-size:.8rem;margin-bottom:12px}
+.muscle-tag-x{cursor:pointer;opacity:.6;font-size:1rem;line-height:1}
+.muscle-tag-x:hover{opacity:1}
+.count{color:#555;font-size:.78rem;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{background:#1a1a1a;border-radius:13px;overflow:hidden;cursor:pointer;border:1px solid #242424;transition:transform .18s}
+.card:active{transform:scale(.97)}
+.card img{width:100%;height:130px;object-fit:cover;background:#111;display:block}
+.card-img-ph{width:100%;height:130px;background:#141414;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.card-body{padding:10px}
+.card-name{font-size:.8rem;font-weight:600;margin-bottom:3px;line-height:1.3}
+.card-muscle{font-size:.7rem;color:#e63946;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.card-meta{font-size:.68rem;color:#555;margin-top:2px}
+.add-btn{display:block;width:100%;margin-top:8px;background:transparent;border:1px solid #2e2e2e;color:#888;padding:6px;border-radius:8px;cursor:pointer;font-size:.73rem;transition:.2s}
+.add-btn:hover{border-color:#e63946;color:#e63946}
+.add-btn.added{background:#e63946;border-color:#e63946;color:#fff}
+.no-results{grid-column:1/-1;text-align:center;padding:40px 20px;color:#555;font-size:.88rem;line-height:1.6}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#181818;width:100%;max-width:580px;max-height:88vh;border-radius:22px 22px 0 0;overflow-y:auto;padding:20px 20px 32px}
+.modal-handle{width:36px;height:4px;background:#333;border-radius:2px;margin:0 auto 16px}
+.modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.modal-close{background:none;border:none;color:#555;font-size:1.4rem;cursor:pointer;padding:2px 6px;line-height:1}
+.modal-close:hover{color:#fff}
+.modal h2{font-size:1.05rem;font-weight:700;line-height:1.3;flex:1;padding-right:8px}
+.modal-meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+.meta-tag{background:#222;padding:4px 10px;border-radius:12px;font-size:.72rem;color:#aaa}
+.meta-tag.red{background:#2a1215;color:#e63946}
+.modal-img{width:100%;max-height:210px;object-fit:cover;border-radius:13px;margin-bottom:16px;background:#111;display:block}
+.steps-title{font-size:.75rem;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.step{display:flex;gap:10px;margin-bottom:10px}
+.step-num{background:#e63946;color:#fff;width:22px;height:22px;min-width:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;margin-top:1px}
+.step p{font-size:.84rem;color:#bbb;line-height:1.55}
+.modal-add-btn{width:100%;margin-top:18px;background:#e63946;border:none;color:#fff;padding:15px;border-radius:13px;cursor:pointer;font-size:.95rem;font-weight:600;transition:opacity .2s}
+.modal-add-btn:hover{opacity:.88}
+.modal-add-btn.added{background:#2a2a2a;color:#666}
+
+/* SEANCE */
+#screen-seance{padding:16px}
+.seance-empty{text-align:center;color:#444;padding:48px 20px;line-height:1.7;font-size:.88rem}
+.seance-item{background:#1a1a1a;border-radius:11px;padding:13px 12px;margin-bottom:9px;display:flex;align-items:center;gap:11px;border:1px solid #242424}
+.seance-item.done{opacity:.45}
+.seance-check{width:24px;height:24px;min-width:24px;border-radius:50%;border:2px solid #3a3a3a;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.seance-check.checked{background:#e63946;border-color:#e63946}
+.seance-check.checked::after{content:'✓';color:#fff;font-size:.72rem;font-weight:700}
+.seance-name{font-size:.86rem;font-weight:600;line-height:1.3}
+.seance-name.done{text-decoration:line-through}
+.seance-muscle{font-size:.7rem;color:#666;margin-top:2px}
+.seance-del{background:none;border:none;color:#444;cursor:pointer;font-size:1rem;padding:4px 6px;line-height:1;border-radius:6px;transition:.2s}
+.seance-del:hover{color:#e63946}
+.seance-stats{background:#1a1a1a;border:1px solid #242424;border-radius:11px;padding:14px 16px;margin-bottom:14px;display:flex;gap:20px}
+.stat{text-align:center;flex:1}
+.stat-num{font-size:1.5rem;font-weight:700;color:#e63946}
+.stat-label{font-size:.7rem;color:#555;margin-top:2px}
+.seance-clear{width:100%;margin-top:6px;background:#1a1a1a;border:1px solid #2a2a2a;color:#666;padding:12px;border-radius:10px;cursor:pointer;font-size:.82rem;transition:.2s}
+.seance-clear:hover{border-color:#e63946;color:#e63946}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-row">
-    <button class="back-btn" id="backBtn" onclick="goBack()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15,18 9,12 15,6"/></svg>
-    </button>
-    <div>
-      <h1 id="headerTitle">Coach <span>Muscu</span></h1>
-      <div class="header-sub" id="headerSub">Sélectionne un muscle</div>
-    </div>
+<header>
+  <h1>💪 COACH MUSCU</h1>
+  <div class="badge" id="badge" onclick="goTab('seance')">0</div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="goTab('corps')">Corps</div>
+  <div class="tab" onclick="goTab('exercices')">Exercices</div>
+  <div class="tab" onclick="goTab('seance')">Ma séance</div>
+</div>
+
+<div id="screen-corps" class="screen active">
+  <div class="side-toggle">
+    <button class="side-btn active" onclick="showSide('front',this)">Face</button>
+    <button class="side-btn" onclick="showSide('back',this)">Dos</button>
   </div>
+  <div class="svg-wrap" id="svg-wrap"></div>
+  <p class="map-hint">Appuie sur un muscle pour voir les exercices</p>
 </div>
 
-<!-- ÉCRAN ACCUEIL -->
-<div class="screen active" id="screenHome">
-  <div class="body-map-card">
-    <div class="body-map-hint">Appuie sur un muscle pour voir les exercices</div>
-    <div class="body-map-views">
-
-      <!-- Face avant -->
-      <div class="body-view-wrap">
-        <div class="body-view-label">Face</div>
-        <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
-          <g fill="#e8ede9" stroke="#c5d0c7" stroke-width="0.7">
-            <ellipse cx="50" cy="16" rx="12" ry="14"/>
-            <rect x="45" y="28" width="10" height="8" rx="3"/>
-            <path d="M28 36 Q20 38 18 55 L18 90 Q18 95 50 95 Q82 95 82 90 L82 55 Q80 38 72 36 Z"/>
-            <path d="M18 40 Q10 42 8 60 Q6 75 10 88 Q12 92 16 90 Q18 80 18 65 Z"/>
-            <path d="M82 40 Q90 42 92 60 Q94 75 90 88 Q88 92 84 90 Q82 80 82 65 Z"/>
-            <path d="M10 88 Q7 100 8 112 Q9 118 13 116 Q15 106 16 92 Z"/>
-            <path d="M90 88 Q93 100 92 112 Q91 118 87 116 Q85 106 84 92 Z"/>
-            <path d="M25 90 Q20 95 22 105 L78 105 Q80 95 75 90 Z"/>
-            <path d="M25 102 Q22 115 23 140 Q23 155 28 158 Q34 158 35 140 Q36 120 36 102 Z"/>
-            <path d="M75 102 Q78 115 77 140 Q77 155 72 158 Q66 158 65 140 Q64 120 64 102 Z"/>
-            <path d="M23 155 Q21 170 22 188 Q23 196 28 196 Q33 194 33 186 Q33 170 28 155 Z"/>
-            <path d="M77 155 Q79 170 78 188 Q77 196 72 196 Q67 194 67 186 Q67 170 72 155 Z"/>
-          </g>
-          <!-- Pectoraux -->
-          <g class="mz" data-muscle="chest" onclick="selectMuscle('chest')">
-            <path d="M29 38 Q50 43 71 38 L71 62 Q50 67 29 62 Z" fill="#1D9E75" opacity="0.6"/>
-          </g>
-          <!-- Épaules -->
-          <g class="mz" data-muscle="shoulders" onclick="selectMuscle('shoulders')">
-            <ellipse cx="21" cy="45" rx="7" ry="9" fill="#EF9F27" opacity="0.6"/>
-            <ellipse cx="79" cy="45" rx="7" ry="9" fill="#EF9F27" opacity="0.6"/>
-          </g>
-          <!-- Bras -->
-          <g class="mz" data-muscle="arms" onclick="selectMuscle('arms')">
-            <path d="M10 58 Q8 73 10 84 Q14 88 17 82 Q17 68 15 56 Z" fill="#3B6D11" opacity="0.6"/>
-            <path d="M90 58 Q92 73 90 84 Q86 88 83 82 Q83 68 85 56 Z" fill="#3B6D11" opacity="0.6"/>
-          </g>
-          <!-- Abdos -->
-          <g class="mz" data-muscle="abs" onclick="selectMuscle('abs')">
-            <path d="M33 64 Q50 68 67 64 L67 90 Q50 94 33 90 Z" fill="#533AB7" opacity="0.6"/>
-          </g>
-          <!-- Jambes -->
-          <g class="mz" data-muscle="legs" onclick="selectMuscle('legs')">
-            <path d="M25 103 Q22 120 23 142 Q27 152 34 142 Q35 122 35 103 Z" fill="#D85A30" opacity="0.6"/>
-            <path d="M75 103 Q78 120 77 142 Q73 152 66 142 Q65 122 65 103 Z" fill="#D85A30" opacity="0.6"/>
-          </g>
-          <!-- Mollets -->
-          <g class="mz" data-muscle="calves" onclick="selectMuscle('calves')">
-            <path d="M23 155 Q21 170 22 186 Q26 194 29 186 Q31 170 28 155 Z" fill="#0C447C" opacity="0.6"/>
-            <path d="M77 155 Q79 170 78 186 Q74 194 71 186 Q69 170 72 155 Z" fill="#0C447C" opacity="0.6"/>
-          </g>
-        </svg>
-      </div>
-
-      <!-- Face dos -->
-      <div class="body-view-wrap">
-        <div class="body-view-label">Dos</div>
-        <svg viewBox="0 0 100 220" xmlns="http://www.w3.org/2000/svg">
-          <g fill="#e8ede9" stroke="#c5d0c7" stroke-width="0.7">
-            <ellipse cx="50" cy="16" rx="12" ry="14"/>
-            <rect x="45" y="28" width="10" height="8" rx="3"/>
-            <path d="M28 36 Q20 38 18 55 L18 90 Q18 95 50 95 Q82 95 82 90 L82 55 Q80 38 72 36 Z"/>
-            <path d="M18 40 Q10 42 8 60 Q6 75 10 88 Q12 92 16 90 Q18 80 18 65 Z"/>
-            <path d="M82 40 Q90 42 92 60 Q94 75 90 88 Q88 92 84 90 Q82 80 82 65 Z"/>
-            <path d="M10 88 Q7 100 8 112 Q9 118 13 116 Q15 106 16 92 Z"/>
-            <path d="M90 88 Q93 100 92 112 Q91 118 87 116 Q85 106 84 92 Z"/>
-            <path d="M25 90 Q20 95 22 105 L78 105 Q80 95 75 90 Z"/>
-            <path d="M25 102 Q22 115 23 140 Q23 155 28 158 Q34 158 35 140 Q36 120 36 102 Z"/>
-            <path d="M75 102 Q78 115 77 140 Q77 155 72 158 Q66 158 65 140 Q64 120 64 102 Z"/>
-            <path d="M23 155 Q21 170 22 188 Q23 196 28 196 Q33 194 33 186 Q33 170 28 155 Z"/>
-            <path d="M77 155 Q79 170 78 188 Q77 196 72 196 Q67 194 67 186 Q67 170 72 155 Z"/>
-          </g>
-          <!-- Dos -->
-          <g class="mz" data-muscle="back" onclick="selectMuscle('back')">
-            <path d="M29 38 Q50 43 71 38 L71 88 Q50 92 29 88 Z" fill="#1D9E75" opacity="0.6"/>
-          </g>
-          <!-- Épaules -->
-          <g class="mz" data-muscle="shoulders" onclick="selectMuscle('shoulders')">
-            <ellipse cx="21" cy="45" rx="7" ry="9" fill="#EF9F27" opacity="0.6"/>
-            <ellipse cx="79" cy="45" rx="7" ry="9" fill="#EF9F27" opacity="0.6"/>
-          </g>
-          <!-- Triceps -->
-          <g class="mz" data-muscle="arms" onclick="selectMuscle('arms')">
-            <path d="M10 58 Q8 73 10 84 Q14 88 17 82 Q17 68 15 56 Z" fill="#3B6D11" opacity="0.6"/>
-            <path d="M90 58 Q92 73 90 84 Q86 88 83 82 Q83 68 85 56 Z" fill="#3B6D11" opacity="0.6"/>
-          </g>
-          <!-- Fessiers -->
-          <g class="mz" data-muscle="glutes" onclick="selectMuscle('glutes')">
-            <path d="M27 90 Q22 96 24 105 L50 105 L50 90 Z" fill="#D4537E" opacity="0.6"/>
-            <path d="M73 90 Q78 96 76 105 L50 105 L50 90 Z" fill="#D4537E" opacity="0.6"/>
-          </g>
-          <!-- Ischio -->
-          <g class="mz" data-muscle="legs" onclick="selectMuscle('legs')">
-            <path d="M25 103 Q22 120 23 142 Q27 152 34 142 Q35 122 35 103 Z" fill="#D85A30" opacity="0.6"/>
-            <path d="M75 103 Q78 120 77 142 Q73 152 66 142 Q65 122 65 103 Z" fill="#D85A30" opacity="0.6"/>
-          </g>
-          <!-- Mollets dos -->
-          <g class="mz" data-muscle="calves" onclick="selectMuscle('calves')">
-            <path d="M23 155 Q21 170 22 186 Q26 194 29 186 Q31 170 28 155 Z" fill="#0C447C" opacity="0.6"/>
-            <path d="M77 155 Q79 170 78 186 Q74 194 71 186 Q69 170 72 155 Z" fill="#0C447C" opacity="0.6"/>
-          </g>
-        </svg>
-      </div>
-
-    </div>
+<div id="screen-exercices" class="screen">
+  <div class="filters">
+    <button class="filter-btn active" onclick="setLevel('all',this)">Tous</button>
+    <button class="filter-btn" onclick="setLevel('Débutant',this)">Débutant</button>
+    <button class="filter-btn" onclick="setLevel('Confirmé',this)">Confirmé</button>
   </div>
-
-  <div class="section-title">Ou choisir directement</div>
-  <div class="muscle-chips" id="muscleChips"></div>
+  <div id="muscle-tag"></div>
+  <div id="count-line" class="count"></div>
+  <div id="grid" class="grid"></div>
 </div>
 
-<!-- ÉCRAN EXERCICES -->
-<div class="screen" id="screenExos">
-  <div class="level-filter">
-    <button class="level-chip active" onclick="setLevel('all',this)">Tous</button>
-    <button class="level-chip" onclick="setLevel('debutant',this)">Débutant</button>
-    <button class="level-chip" onclick="setLevel('confirme',this)">Confirmé</button>
-  </div>
-  <div id="exoListWrap"></div>
+<div id="screen-seance" class="screen">
+  <div id="seance-content"></div>
 </div>
 
-<!-- ÉCRAN DÉTAIL -->
-<div class="screen" id="screenDetail">
-  <div id="detailContent"></div>
+<div class="modal-overlay" id="overlay" onclick="maybeClose(event)">
+  <div class="modal" id="modal"></div>
 </div>
-
-<!-- ÉCRAN SÉANCE -->
-<div class="screen" id="screenSeance">
-  <div class="warning">⚠️ Consultez un professionnel de santé avant de commencer. Ces informations sont données à titre indicatif.</div>
-  <div id="seanceContent"></div>
-</div>
-
-<nav class="nav">
-  <button class="nav-btn active" id="nav-home" onclick="showNav('home')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <circle cx="12" cy="8" r="5"/><path d="M3 21c0-4.418 4.03-8 9-8s9 3.582 9 8"/>
-    </svg>
-    Muscles
-  </button>
-  <button class="nav-btn" id="nav-seance" onclick="showNav('seance')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>
-      <path d="M8 15h2M8 18h2M14 15h2M14 18h2"/>
-    </svg>
-    Séance <span class="badge-count" id="seanceBadge"></span>
-  </button>
-</nav>
-
-<div class="toast" id="toast"></div>
 
 <script>
-const WGER = 'https://wger.de/api/v2';
-const MUSCLES = [
-  { key:'chest',     label:'Pectoraux',  cat:11, emoji:'💪' },
-  { key:'back',      label:'Dos',        cat:12, emoji:'🏋️' },
-  { key:'shoulders', label:'Épaules',    cat:13, emoji:'🏋️' },
-  { key:'arms',      label:'Bras',       cat:8,  emoji:'💪' },
-  { key:'abs',       label:'Abdominaux', cat:10, emoji:'🎯' },
-  { key:'legs',      label:'Jambes',     cat:9,  emoji:'🦵' },
-  { key:'calves',    label:'Mollets',    cat:14, emoji:'🦶' },
-  { key:'glutes',    label:'Fessiers',   cat:9,  emoji:'🍑' },
+const RAW='https://raw.githubusercontent.com/Yacine64/coach-muscu/main/';
+let all=[],filtered=[],currentLevel='all',currentMuscle=null,currentSide='front';
+let seance=JSON.parse(localStorage.getItem('seance')||'[]');
+
+// ── MUSCLE ZONES ────────────────────────────────────────────────────
+const FRONT=[
+  {en:'neck',       fr:'Cou',             d:'M158,30 Q170,24 182,30 L180,50 Q170,54 160,50 Z'},
+  {en:'chest',      fr:'Pectoraux',       d:'M126,72 Q148,65 170,67 Q192,65 214,72 L216,105 Q192,112 170,109 Q148,112 124,105 Z'},
+  {en:'shoulders',  fr:'Épaules',         d:'M104,70 Q124,63 126,78 L124,102 Q112,107 102,98 Q96,86 104,70 Z M216,78 Q218,63 236,70 Q244,86 238,98 Q228,107 216,102 Z'},
+  {en:'biceps',     fr:'Biceps',          d:'M100,104 Q114,100 118,106 L116,132 Q106,137 98,128 Q95,118 100,104 Z M222,106 Q226,100 240,104 Q245,118 242,128 Q234,137 224,132 Z'},
+  {en:'forearms',   fr:'Avant-bras',      d:'M95,135 Q110,129 114,136 L110,166 Q100,170 92,160 Q89,148 95,135 Z M226,136 Q230,129 245,135 Q251,148 248,160 Q240,170 230,166 Z'},
+  {en:'abdominals', fr:'Abdominaux',      d:'M146,110 Q170,106 194,110 L196,168 Q170,172 144,168 Z'},
+  {en:'obliques',   fr:'Obliques',        d:'M126,108 Q145,106 146,120 L143,165 Q130,160 122,148 Q118,133 126,108 Z M194,120 Q195,106 214,108 Q222,133 218,148 Q210,160 197,165 Z'},
+  {en:'adductors',  fr:'Adducteurs',      d:'M150,222 Q163,218 170,220 Q177,218 190,222 L186,256 Q170,260 154,256 Z'},
+  {en:'quadriceps', fr:'Quadriceps',      d:'M128,218 Q148,213 151,224 L148,268 Q136,272 126,260 Q121,244 128,218 Z M192,224 Q195,213 212,218 Q219,244 214,260 Q204,272 192,268 Z'},
+  {en:'calves',     fr:'Mollets',         d:'M130,310 Q146,305 149,312 L146,350 Q134,354 126,342 Q123,326 130,310 Z M191,312 Q194,305 210,310 Q217,326 214,342 Q206,354 194,350 Z'},
 ];
+const BACK=[
+  {en:'traps',       fr:'Trapèzes',        d:'M132,58 Q170,52 208,58 L210,88 Q190,84 170,82 Q150,84 130,88 Z'},
+  {en:'shoulders',   fr:'Épaules',         d:'M106,72 Q128,65 130,80 L128,104 Q115,109 104,100 Q97,88 106,72 Z M212,80 Q214,65 234,72 Q243,88 236,100 Q225,109 212,104 Z'},
+  {en:'lats',        fr:'Dorsaux',         d:'M120,90 Q140,85 158,96 L160,148 Q144,152 130,146 Q118,134 115,116 Q113,102 120,90 Z M182,96 Q200,85 220,90 Q227,102 225,116 Q222,134 210,146 Q196,152 180,148 Z'},
+  {en:'triceps',     fr:'Triceps',         d:'M102,106 Q116,101 120,108 L118,135 Q108,140 99,130 Q96,120 102,106 Z M220,108 Q224,101 238,106 Q244,120 241,130 Q232,140 222,135 Z'},
+  {en:'forearms',    fr:'Avant-bras',      d:'M96,137 Q112,131 116,138 L112,167 Q102,171 93,161 Q90,149 96,137 Z M224,138 Q228,131 244,137 Q250,149 247,161 Q238,171 228,167 Z'},
+  {en:'middle back', fr:'Dos moyen',       d:'M146,150 Q170,145 194,150 L196,188 Q170,192 144,188 Z'},
+  {en:'lower back',  fr:'Lombaires',       d:'M147,190 Q170,186 193,190 L192,218 Q170,222 148,218 Z'},
+  {en:'glutes',      fr:'Fessiers',        d:'M130,220 Q152,215 170,217 Q188,215 210,220 L208,255 Q186,264 170,262 Q154,264 132,255 Z'},
+  {en:'hamstrings',  fr:'Ischio-jambiers', d:'M130,258 Q150,253 153,263 L150,305 Q137,310 128,298 Q124,280 130,258 Z M187,263 Q190,253 210,258 Q216,280 212,298 Q203,310 190,305 Z'},
+  {en:'calves',      fr:'Mollets',         d:'M129,310 Q145,305 148,312 L145,350 Q133,355 124,342 Q121,326 129,310 Z M192,312 Q195,305 211,310 Q219,326 216,342 Q207,355 195,350 Z'},
+];
+const ALL_MUSCLES=[...FRONT,...BACK];
 
-let currentMuscleKey=null, currentExo=null, currentLevel='all';
-let allExos=[], navStack=[], seance=[];
-
-function getLevel(id){ return (id%2===0)?'debutant':'confirme'; }
-
-function getName(e){
-  if(e.translations){
-    const fr=e.translations.find(t=>t.language===12); if(fr&&fr.name) return fr.name;
-    const en=e.translations.find(t=>t.language===2); if(en&&en.name) return en.name;
-    const any=e.translations.find(t=>t.name); if(any) return any.name;
-  }
-  return e.name||`Exercice #${e.id}`;
-}
-function getDesc(e){
-  if(e.translations){
-    const fr=e.translations.find(t=>t.language===12); if(fr&&fr.description) return strip(fr.description);
-    const en=e.translations.find(t=>t.language===2); if(en&&en.description) return strip(en.description);
-  }
-  return e.description?strip(e.description):'';
-}
-function getImg(e){ if(e.images&&e.images.length>0){const m=e.images.find(i=>i.is_main)||e.images[0];return m.image;} return null; }
-function strip(h){ return h.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim(); }
-
-function init(){
-  document.getElementById('muscleChips').innerHTML = MUSCLES.map(m=>
-    `<button class="muscle-chip" onclick="selectMuscle('${m.key}')">${m.emoji} ${m.label}</button>`
-  ).join('');
+// ── SVG ────────────────────────────────────────────────────────────
+function centroid(d){
+  const pts=[...d.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(m=>[+m[1],+m[2]]);
+  if(!pts.length)return[170,200];
+  return[pts.reduce((s,p)=>s+p[0],0)/pts.length,pts.reduce((s,p)=>s+p[1],0)/pts.length];
 }
 
-function selectMuscle(key){
-  currentMuscleKey=key;
-  const m=MUSCLES.find(x=>x.key===key);
-  navStack=['home'];
-  document.querySelectorAll('.mz').forEach(el=>el.classList.remove('selected'));
-  document.querySelectorAll(`[data-muscle="${key}"]`).forEach(el=>el.classList.add('selected'));
-  document.querySelectorAll('.muscle-chip').forEach(el=>
-    el.classList.toggle('active', el.textContent.trim().includes(m.label))
-  );
-  setHeader(m.label,'Chargement…');
-  document.getElementById('backBtn').style.display='block';
-  document.getElementById('nav-home').classList.add('active');
-  document.getElementById('nav-seance').classList.remove('active');
-  showScreen('screenExos');
-  loadExos(m.cat);
+const SIL=`
+<ellipse cx="170" cy="30" rx="19" ry="23" class="body-silhouette"/>
+<rect x="163" y="51" width="14" height="16" rx="5" class="body-silhouette"/>
+<path d="M116,65 Q104,80 102,115 Q100,145 106,168 Q118,176 132,178 Q144,215 148,228 Q156,217 170,215 Q184,217 192,228 Q196,215 208,178 Q222,176 234,168 Q240,145 238,115 Q236,80 224,65 Q204,58 170,56 Q136,58 116,65Z" class="body-silhouette"/>
+<path d="M102,66 Q89,76 84,104 Q81,126 84,150 Q88,168 93,178 Q100,163 98,142 Q96,118 100,96 Q104,80 110,70Z" class="body-silhouette"/>
+<path d="M238,66 Q251,76 256,104 Q259,126 256,150 Q252,168 247,178 Q240,163 242,142 Q244,118 240,96 Q236,80 230,70Z" class="body-silhouette"/>
+<path d="M130,222 Q118,234 116,260 Q114,286 116,312 Q118,338 122,360 Q130,364 140,362 Q146,338 147,312 Q148,286 149,260 Q150,234 148,222Z" class="body-silhouette"/>
+<path d="M210,222 Q222,234 224,260 Q226,286 224,312 Q222,338 218,360 Q210,364 200,362 Q194,338 193,312 Q192,286 191,260 Q190,234 192,222Z" class="body-silhouette"/>`;
+
+function buildSVG(side){
+  const muscles=side==='front'?FRONT:BACK;
+  let zones='';
+  muscles.forEach(m=>{
+    const active=currentMuscle===m.en?' active':'';
+    const[cx,cy]=centroid(m.d);
+    zones+=`<path class="muscle-zone${active}" d="${m.d}" onclick="selectMuscle('${m.en}','${m.fr}')"/>
+<text class="zone-label" x="${cx.toFixed(0)}" y="${cy.toFixed(0)}">${m.fr}</text>`;
+  });
+  return`<svg viewBox="60 20 220 355" xmlns="http://www.w3.org/2000/svg">${SIL}${zones}</svg>`;
 }
 
-async function loadExos(catId){
-  const wrap=document.getElementById('exoListWrap');
-  wrap.innerHTML=`<div class="loading"><div class="spinner"></div>Chargement…</div>`;
-  try{
-    let res=await fetch(`${WGER}/exerciseinfo/?format=json&language=2&category=${catId}&limit=40`);
-    let data=await res.json();
-    allExos=data.results||[];
-    if(allExos.length<4){
-      res=await fetch(`${WGER}/exerciseinfo/?format=json&category=${catId}&limit=40`);
-      data=await res.json();
-      allExos=data.results||[];
-    }
-    const m=MUSCLES.find(x=>x.key===currentMuscleKey);
-    setHeader(m?m.label:'Exercices',`${allExos.length} exercice${allExos.length>1?'s':''}`);
-    renderExos();
-  } catch(e){
-    wrap.innerHTML=`<div class="empty-state"><div class="empty-icon">⚠️</div><p>Connexion impossible.<br>Vérifiez internet.</p></div>`;
-  }
-}
-
-function renderExos(){
-  const wrap=document.getElementById('exoListWrap');
-  const list=currentLevel==='all'?allExos:allExos.filter(e=>getLevel(e.id)===currentLevel);
-  if(!list.length){
-    wrap.innerHTML=`<div class="empty-state"><div class="empty-icon">🤷</div><p>Aucun exercice pour ce niveau.</p></div>`;
-    return;
-  }
-  wrap.innerHTML=`<div class="exo-list">${list.map(e=>{
-    const name=getName(e), img=getImg(e), lvl=getLevel(e.id), cat=e.category?e.category.name:'';
-    return `<div class="exo-card" onclick="openExo(${e.id})">
-      <div class="exo-img-wrap">
-        ${img?`<img src="${img}" alt="${name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'exo-img-ph\\'>🏋️</div>'">`:`<div class="exo-img-ph">🏋️</div>`}
-      </div>
-      <div class="exo-body">
-        <div class="exo-header">
-          <div class="exo-name">${name}</div>
-          <span class="exo-level lv-${lvl}">${lvl==='debutant'?'Débutant':'Confirmé'}</span>
-        </div>
-        <div class="exo-cat">${cat}</div>
-      </div>
-    </div>`;
-  }).join('')}</div>`;
-}
-
-function openExo(id){
-  const e=allExos.find(x=>x.id===id); if(!e) return;
-  currentExo=e;
-  navStack.push('exos');
-  const name=getName(e), desc=getDesc(e), img=getImg(e), lvl=getLevel(e.id);
-  const inSeance=seance.some(s=>s.id===id);
-  const cat=e.category?e.category.name:'';
-  const equip=e.equipment?e.equipment.map(q=>q.name).join(', '):'';
-  const musc=e.muscles?e.muscles.map(m=>m.name_en||m.name).join(', '):'';
-  const muscSec=e.muscles_secondary?e.muscles_secondary.map(m=>m.name_en||m.name).join(', '):'';
-  const imgs=e.images||[];
-  setHeader(name,cat);
-  document.getElementById('detailContent').innerHTML=`
-    <div class="detail-img-wrap">
-      ${img?`<img src="${img}" alt="${name}" onerror="this.parentElement.innerHTML='<div style=\\'font-size:64px\\'>🏋️</div>'">`:`<div style="font-size:64px">🏋️</div>`}
-    </div>
-    ${imgs.length>1?`<div class="thumb-row">${imgs.map(i=>`<img src="${i.image}" loading="lazy"/>`).join('')}</div>`:''}
-    <div class="detail-header">
-      <div class="detail-name">${name}</div>
-      <div class="badges">
-        <span class="badge ${lvl==='debutant'?'badge-green':'badge-amber'}">${lvl==='debutant'?'Débutant':'Confirmé'}</span>
-        ${cat?`<span class="badge badge-gray">📂 ${cat}</span>`:''}
-        ${equip?`<span class="badge badge-gray">🏋️ ${equip}</span>`:''}
-      </div>
-    </div>
-    ${desc?`<div class="detail-section"><h3>Description</h3><p>${desc}</p></div>`:''}
-    ${musc?`<div class="detail-section"><h3>Muscles principaux</h3><div class="muscles-row">${musc.split(', ').map(m=>`<span class="badge badge-green">${m}</span>`).join('')}</div></div>`:''}
-    ${muscSec?`<div class="detail-section"><h3>Muscles secondaires</h3><div class="muscles-row">${muscSec.split(', ').map(m=>`<span class="badge badge-gray">${m}</span>`).join('')}</div></div>`:''}
-    <button class="add-btn ${inSeance?'added':''}" id="addBtn" onclick="toggleSeance(${id})">
-      ${inSeance?'✓ Ajouté à ma séance':'+ Ajouter à ma séance'}
-    </button>
-  `;
-  showScreen('screenDetail');
-}
-
-function toggleSeance(id){
-  const e=allExos.find(x=>x.id===id); if(!e) return;
-  const idx=seance.findIndex(s=>s.id===id);
-  if(idx===-1){
-    seance.push({id:e.id,name:getName(e),done:false});
-    showToast('Ajouté à la séance 💪');
-    document.getElementById('addBtn').textContent='✓ Ajouté à ma séance';
-    document.getElementById('addBtn').classList.add('added');
-  } else {
-    seance.splice(idx,1);
-    showToast('Retiré de la séance');
-    document.getElementById('addBtn').textContent='+ Ajouter à ma séance';
-    document.getElementById('addBtn').classList.remove('added');
-  }
-  updateBadge();
-}
-
-function renderSeance(){
-  const el=document.getElementById('seanceContent');
-  if(!seance.length){
-    el.innerHTML=`<div class="seance-empty"><div class="icon">📋</div><p>Ta séance est vide.<br>Parcours les muscles et ajoute des exercices !</p></div>`;
-    return;
-  }
-  const done=seance.filter(s=>s.done).length;
-  el.innerHTML=`
-    <div class="seance-top"><div class="seance-top-title">${seance.length} exercice${seance.length>1?'s':''}</div>
-    <button class="clear-btn" onclick="clearSeance()">Vider</button></div>
-    ${seance.map(s=>`<div class="seance-item">
-      <div class="seance-item-name">${s.name}</div>
-      <div class="check ${s.done?'on':''}" onclick="toggleDone(${s.id})">
-        ${s.done?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20,6 9,17 4,12"/></svg>':''}
-      </div>
-    </div>`).join('')}
-    <div class="seance-footer">
-      <span>${done} / ${seance.length} réalisés</span>
-      <button class="finish-btn" onclick="finishSeance()">Terminer 🎉</button>
-    </div>`;
-}
-
-function toggleDone(id){ const s=seance.find(x=>x.id===id); if(s){s.done=!s.done;} renderSeance(); }
-function clearSeance(){ if(confirm('Vider la séance ?')){seance=[];updateBadge();renderSeance();} }
-function finishSeance(){
-  const done=seance.filter(s=>s.done).length;
-  if(!done){showToast('Coche au moins un exercice !');return;}
-  showToast(`Bravo ! ${done} exercice${done>1?'s':''} réalisé${done>1?'s':''} 🎉`);
-  seance=[];updateBadge();renderSeance();
-}
-function updateBadge(){
-  const b=document.getElementById('seanceBadge');
-  if(seance.length>0){b.style.display='inline';b.textContent=seance.length;}
-  else{b.style.display='none';}
-}
-
-function goBack(){
-  const prev=navStack.pop();
-  if(!prev||prev==='home'){
-    setHeader('Coach <span style="color:var(--green)">Muscu</span>','Sélectionne un muscle');
-    document.getElementById('backBtn').style.display='none';
-    showScreen('screenHome');
-  } else if(prev==='exos'){
-    const m=MUSCLES.find(x=>x.key===currentMuscleKey);
-    setHeader(m?m.label:'Exercices',`${allExos.length} exercices`);
-    showScreen('screenExos');
-  }
-}
-
-function showNav(tab){
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('nav-'+tab).classList.add('active');
-  if(tab==='home'){
-    setHeader('Coach <span style="color:var(--green)">Muscu</span>','Sélectionne un muscle');
-    document.getElementById('backBtn').style.display='none';
-    navStack=[];
-    showScreen('screenHome');
-  } else if(tab==='seance'){
-    document.getElementById('backBtn').style.display='none';
-    setHeader('Ma <span style="color:var(--green)">séance</span>','Exercices sélectionnés');
-    renderSeance();
-    showScreen('screenSeance');
-  }
-}
-
-function setLevel(lvl,btn){
-  currentLevel=lvl;
-  document.querySelectorAll('.level-chip').forEach(b=>b.classList.remove('active'));
+function showSide(side,btn){
+  currentSide=side;
+  document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderExos();
+  document.getElementById('svg-wrap').innerHTML=buildSVG(side);
 }
-function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
-function setHeader(title,sub){ document.getElementById('headerTitle').innerHTML=title; document.getElementById('headerSub').textContent=sub; }
-function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
 
-init();
+// ── TABS ───────────────────────────────────────────────────────────
+function goTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['corps','exercices','seance'][i]===name));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  if(name==='seance')renderSeance();
+}
+
+// ── DATA ───────────────────────────────────────────────────────────
+fetch(RAW+'exercices.json')
+  .then(r=>r.json())
+  .then(data=>{all=data;document.getElementById('svg-wrap').innerHTML=buildSVG('front');applyFilters();})
+  .catch(()=>{document.getElementById('grid').innerHTML='<div class="no-results">Impossible de charger les exercices.</div>';document.getElementById('svg-wrap').innerHTML=buildSVG('front');});
+
+// ── FILTERS ────────────────────────────────────────────────────────
+function selectMuscle(en,fr){
+  currentMuscle=en;applyFilters();goTab('exercices');
+  document.getElementById('svg-wrap').innerHTML=buildSVG(currentSide);
+}
+function clearMuscle(){currentMuscle=null;applyFilters();document.getElementById('svg-wrap').innerHTML=buildSVG(currentSide);}
+function setLevel(level,btn){
+  currentLevel=level;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');applyFilters();
+}
+function applyFilters(){
+  let ex=all;
+  if(currentMuscle)ex=ex.filter(e=>(e.muscle_en||'').toLowerCase()===currentMuscle||(e.muscles_secondaires||[]).join(' ').toLowerCase().includes(currentMuscle));
+  if(currentLevel!=='all')ex=ex.filter(e=>e.niveau===currentLevel);
+  filtered=ex;renderGrid();
+  const tag=document.getElementById('muscle-tag');
+  if(currentMuscle){const lbl=ALL_MUSCLES.find(m=>m.en===currentMuscle)?.fr||currentMuscle;tag.innerHTML=`<div class="muscle-tag">${lbl}<span class="muscle-tag-x" onclick="clearMuscle()">✕</span></div>`;}
+  else tag.innerHTML='';
+  document.getElementById('count-line').textContent=filtered.length?`${filtered.length} exercice${filtered.length>1?'s':''}`:' ';
+}
+
+// ── GRID ───────────────────────────────────────────────────────────
+function renderGrid(){
+  const grid=document.getElementById('grid');
+  if(!filtered.length){grid.innerHTML='<div class="no-results">Aucun exercice trouvé.<br>Essaie un autre filtre.</div>';return;}
+  grid.innerHTML=filtered.slice(0,80).map(ex=>{
+    const inS=seance.some(s=>s.id===ex.id);
+    const imgSrc=ex.gif_path?RAW+ex.gif_path:'';
+    return`<div class="card" onclick="openModal('${ex.id}')">
+${imgSrc?`<img src="${imgSrc}" alt="${esc(ex.nom)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="card-img-ph">💪</div>`}
+<div class="card-body">
+<div class="card-name">${esc(ex.nom)}</div>
+<div class="card-muscle">${esc(ex.muscle||'')}</div>
+<div class="card-meta">${esc(ex.niveau||'')}${ex.equipement?' · '+esc(ex.equipement):''}</div>
+<button class="add-btn${inS?' added':''}" onclick="toggleSeance(event,'${ex.id}')">${inS?'✓ Dans la séance':'+ Ajouter'}</button>
+</div></div>`;
+  }).join('');
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────
+function openModal(id){
+  const ex=all.find(e=>e.id===id);if(!ex)return;
+  const inS=seance.some(s=>s.id===id);
+  const imgSrc=ex.gif_path?RAW+ex.gif_path:'';
+  const steps=(ex.steps||[]).map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><p>${esc(s)}</p></div>`).join('');
+  document.getElementById('modal').innerHTML=`
+<div class="modal-handle"></div>
+<div class="modal-header"><h2>${esc(ex.nom)}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+<div class="modal-meta">
+${ex.muscle?`<span class="meta-tag red">${esc(ex.muscle)}</span>`:''}
+${ex.niveau?`<span class="meta-tag">${esc(ex.niveau)}</span>`:''}
+${ex.equipement?`<span class="meta-tag">${esc(ex.equipement)}</span>`:''}
+${(ex.muscles_secondaires||[]).map(m=>`<span class="meta-tag">${esc(m)}</span>`).join('')}
+</div>
+${imgSrc?`<img class="modal-img" src="${imgSrc}" alt="${esc(ex.nom)}" onerror="this.style.display='none'">`:''}
+${steps?`<div class="steps-title">Étapes</div>${steps}`:'<p style="color:#555;font-size:.82rem">Pas d\'instructions disponibles.</p>'}
+<button id="mbtn" class="modal-add-btn${inS?' added':''}" onclick="toggleSeance(event,'${id}');syncMBtn('${id}')">${inS?'✓ Dans la séance':'+ Ajouter à ma séance'}</button>`;
+  document.getElementById('overlay').classList.add('open');
+}
+function syncMBtn(id){const inS=seance.some(s=>s.id===id);const b=document.getElementById('mbtn');if(b){b.textContent=inS?'✓ Dans la séance':'+ Ajouter à ma séance';b.classList.toggle('added',inS);}}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+function maybeClose(e){if(e.target.id==='overlay')closeModal();}
+
+// ── SEANCE ─────────────────────────────────────────────────────────
+function toggleSeance(e,id){
+  e.stopPropagation();
+  const idx=seance.findIndex(s=>s.id===id);
+  if(idx>=0)seance.splice(idx,1);
+  else{const ex=all.find(e=>e.id===id);if(ex)seance.push({id:ex.id,nom:ex.nom,muscle:ex.muscle||'',done:false});}
+  saveSeance();renderGrid();
+}
+function toggleDone(id){const s=seance.find(s=>s.id===id);if(s){s.done=!s.done;saveSeance();renderSeance();}}
+function removeFromSeance(id){seance=seance.filter(s=>s.id!==id);saveSeance();renderSeance();}
+function clearSeance(){if(!confirm('Vider la séance ?'))return;seance=[];saveSeance();renderSeance();}
+function saveSeance(){localStorage.setItem('seance',JSON.stringify(seance));document.getElementById('badge').textContent=seance.length;}
+function renderSeance(){
+  const el=document.getElementById('seance-content');
+  if(!seance.length){el.innerHTML='<div class="seance-empty">Aucun exercice dans la séance.<br>Parcours les exercices et ajoute-en !</div>';return;}
+  const done=seance.filter(s=>s.done).length;
+  el.innerHTML=`<div class="seance-stats">
+<div class="stat"><div class="stat-num">${seance.length}</div><div class="stat-label">Exercices</div></div>
+<div class="stat"><div class="stat-num">${done}</div><div class="stat-label">Faits</div></div>
+<div class="stat"><div class="stat-num">${seance.length-done}</div><div class="stat-label">Restants</div></div>
+</div>
+${seance.map(s=>`<div class="seance-item${s.done?' done':''}">
+<div class="seance-check${s.done?' checked':''}" onclick="toggleDone('${s.id}')"></div>
+<div style="flex:1;min-width:0"><div class="seance-name${s.done?' done':''}">${esc(s.nom)}</div><div class="seance-muscle">${esc(s.muscle)}</div></div>
+<button class="seance-del" onclick="removeFromSeance('${s.id}')">✕</button>
+</div>`).join('')}
+<button class="seance-clear" onclick="clearSeance()">Vider la séance</button>`;
+}
+
+// ── UTILS ──────────────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── INIT ───────────────────────────────────────────────────────────
+document.getElementById('badge').textContent=seance.length;
 </script>
 </body>
 </html>
