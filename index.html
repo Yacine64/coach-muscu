@@ -235,8 +235,8 @@ function setLevel(level,btn){
 }
 function applyFilters(){
   let ex=all;
-  if(currentMuscle)ex=ex.filter(e=>(e.muscle_en||'').toLowerCase()===currentMuscle||(e.muscles_secondaires||[]).join(' ').toLowerCase().includes(currentMuscle));
-  if(currentLevel!=='all')ex=ex.filter(e=>e.niveau===currentLevel);
+  if(currentMuscle)ex=ex.filter(e=>(e.muscle_en||e.muscle||'').toLowerCase()===currentMuscle||(e.muscles_secondaires||[]).join(' ').toLowerCase().includes(currentMuscle));
+  if(currentLevel!=='all')ex=ex.filter(e=>LEVELS_FR[(e.niveau||'').toLowerCase()]===currentLevel||e.niveau===currentLevel);
   filtered=ex;renderGrid();
   const tag=document.getElementById('muscle-tag');
   if(currentMuscle){const lbl=ALL_MUSCLES.find(m=>m.en===currentMuscle)?.fr||currentMuscle;tag.innerHTML=`<div class="muscle-tag">${lbl}<span class="muscle-tag-x" onclick="clearMuscle()">✕</span></div>`;}
@@ -255,8 +255,8 @@ function renderGrid(){
 ${imgSrc?`<img src="${imgSrc}" alt="${esc(ex.nom)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="card-img-ph">💪</div>`}
 <div class="card-body">
 <div class="card-name">${esc(ex.nom)}</div>
-<div class="card-muscle">${esc(ex.muscle||'')}</div>
-<div class="card-meta">${esc(ex.niveau||'')}${ex.equipement?' · '+esc(ex.equipement):''}</div>
+<div class="card-muscle">${esc(tr(ex.muscle,MUSCLES_FR))}</div>
+<div class="card-meta">${esc(tr(ex.niveau,LEVELS_FR))}${ex.equipement?' · '+esc(tr(ex.equipement,EQUIP_FR)):''}</div>
 <button class="add-btn${inS?' added':''}" onclick="toggleSeance(event,'${ex.id}')">${inS?'✓ Dans la séance':'+ Ajouter'}</button>
 </div></div>`;
   }).join('');
@@ -272,10 +272,10 @@ function openModal(id){
 <div class="modal-handle"></div>
 <div class="modal-header"><h2>${esc(ex.nom)}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
 <div class="modal-meta">
-${ex.muscle?`<span class="meta-tag red">${esc(ex.muscle)}</span>`:''}
-${ex.niveau?`<span class="meta-tag">${esc(ex.niveau)}</span>`:''}
-${ex.equipement?`<span class="meta-tag">${esc(ex.equipement)}</span>`:''}
-${(ex.muscles_secondaires||[]).map(m=>`<span class="meta-tag">${esc(m)}</span>`).join('')}
+${ex.muscle?`<span class="meta-tag red">${esc(tr(ex.muscle,MUSCLES_FR))}</span>`:''}
+${ex.niveau?`<span class="meta-tag">${esc(tr(ex.niveau,LEVELS_FR))}</span>`:''}
+${ex.equipement?`<span class="meta-tag">${esc(tr(ex.equipement,EQUIP_FR))}</span>`:''}
+${(ex.muscles_secondaires||[]).map(m=>`<span class="meta-tag">${esc(tr(m,MUSCLES_FR))}</span>`).join('')}
 </div>
 ${imgSrc?`<img class="modal-img" src="${imgSrc}" alt="${esc(ex.nom)}" onerror="this.style.display='none'">`:''}
 ${steps?`<div class="steps-title">Étapes</div>${steps}`:'<p style="color:#555;font-size:.82rem">Pas d\'instructions disponibles.</p>'}
@@ -309,11 +309,17 @@ function renderSeance(){
 </div>
 ${seance.map(s=>`<div class="seance-item${s.done?' done':''}">
 <div class="seance-check${s.done?' checked':''}" onclick="toggleDone('${s.id}')"></div>
-<div style="flex:1;min-width:0"><div class="seance-name${s.done?' done':''}">${esc(s.nom)}</div><div class="seance-muscle">${esc(s.muscle)}</div></div>
+<div style="flex:1;min-width:0"><div class="seance-name${s.done?' done':''}">${esc(s.nom)}</div><div class="seance-muscle">${esc(tr(s.muscle,MUSCLES_FR))}</div></div>
 <button class="seance-del" onclick="removeFromSeance('${s.id}')">✕</button>
 </div>`).join('')}
 <button class="seance-clear" onclick="clearSeance()">Vider la séance</button>`;
 }
+
+// ── TRADUCTION ─────────────────────────────────────────────────────
+const MUSCLES_FR={"abdominals":"Abdominaux","biceps":"Biceps","chest":"Pectoraux","lats":"Dorsaux","quadriceps":"Quadriceps","hamstrings":"Ischio-jambiers","shoulders":"Épaules","triceps":"Triceps","calves":"Mollets","glutes":"Fessiers","forearms":"Avant-bras","traps":"Trapèzes","middle back":"Dos moyen","lower back":"Lombaires","neck":"Cou","abductors":"Abducteurs","adductors":"Adducteurs","hip flexors":"Fléchisseurs de la hanche","obliques":"Obliques","groin":"Aine","rhomboids":"Rhomboïdes","brachialis":"Brachial","soleus":"Soléaire","inner thighs":"Face interne des cuisses","it band":"Bandelette ilio-tibiale"};
+const LEVELS_FR={"beginner":"Débutant","intermediate":"Confirmé","advanced":"Confirmé"};
+const EQUIP_FR={"body only":"Poids du corps","barbell":"Barre","dumbbell":"Haltères","dumbbells":"Haltères","machine":"Machine","cable":"Poulie","kettlebell":"Kettlebell","bands":"Élastiques","band":"Élastique","medicine ball":"Médecine-ball","exercise ball":"Swiss ball","foam roll":"Rouleau","e-z curl bar":"Barre EZ","other":"Autre","none":"Aucun"};
+function tr(val,dict){return dict[(val||'').toLowerCase()]||val||'';}
 
 // ── UTILS ──────────────────────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
